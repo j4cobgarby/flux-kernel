@@ -1,0 +1,5 @@
+.cache
+limine
+*.ini
+fluximage
+compile_commands.json
