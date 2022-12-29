@@ -1,3 +1,16 @@
+/* structures.h
+
+This file contains C structs and types corresponding to all relevant structures
+used by the x86-64 (ia-32e) architecture. Any system structures that are used
+by the kernel, but not defined in the Intel Developer Manual, will not be in
+this file, and instead likely in a header file related to their functionality.
+
+Contributors: (add your name if you modify this file)
+
+ - Jacob Garby <j4cobgarby@gmail.com>
+
+*/
+
 #ifndef __INCLUDE_X64_STRUCTURES_H__
 #define __INCLUDE_X64_STRUCTURES_H__
 

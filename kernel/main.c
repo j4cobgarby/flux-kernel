@@ -1,7 +1,8 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "arch/x64/structures.h"
+#include "arch/x64/mem.h"
 #include "limine.h"
+#include "flux.h"
 
 #ifdef __ARCH_X64__
 #include "arch/x64/idt.h"
@@ -9,8 +10,13 @@
 #error Unkown architecture
 #endif
 
-static volatile struct limine_terminal_request terminal_request = {
+volatile struct limine_terminal_request flux_terminal_request = {
     .id = LIMINE_TERMINAL_REQUEST,
+    .revision = 0
+};
+
+static volatile struct limine_kernel_address_request kern_addr_request = {
+    .id = LIMINE_KERNEL_ADDRESS_REQUEST,
     .revision = 0
 };
 
@@ -20,23 +26,31 @@ static void done(void) {
     }
 }
 
-void _start(void) {
+void itoa_hex64(char *buf, uint64_t num) {
+    static char lookup[] = "0123456789abcdef";
 
+    for (int i = 0; i < 16; i++) {
+        buf[15-i] = lookup[num & 0xf];
+        num >>= 4;
+    }
+}
+
+void _start(void) {
 #ifdef __ARCH_X64__
     // Initialise the IDT, which the CPU uses to translate interrupt/exception
     // vectors to the address of the handler of that interrupt.
     idt_init();
+    mem_init();
 #endif /* __ARCH_X64__ */
 
-    if (terminal_request.response == NULL
-        || terminal_request.response->terminal_count < 1) {
+    if (flux_terminal_request.response == NULL
+        || flux_terminal_request.response->terminal_count < 1) {
         done();
     }
 
-    struct limine_terminal *terminal = terminal_request.response->terminals[0];
-    terminal_request.response->write(terminal, "Welcome to flux!", 16);
+    if (kern_addr_request.response == NULL) done();
 
-    __asm__("int $0x32");
+    LIMINE_WRITE("Welcome to flux!\n", 17);
 
     done();
 }

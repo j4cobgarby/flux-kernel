@@ -3,3 +3,7 @@ limine
 *.ini
 fluximage
 compile_commands.json
+*.o
+.iso
+.elf
+fluximage.iso
