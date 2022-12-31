@@ -1,11 +1,12 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "arch/x64/mem.h"
 #include "limine.h"
 #include "flux.h"
 
 #ifdef __ARCH_X64__
 #include "arch/x64/idt.h"
+#include "arch/x64/mem.h"
+#include "arch/x64/serial.h"
 #else
 #error Unkown architecture
 #endif
@@ -39,6 +40,7 @@ void _start(void) {
 #ifdef __ARCH_X64__
     // Initialise the IDT, which the CPU uses to translate interrupt/exception
     // vectors to the address of the handler of that interrupt.
+    serial_init();
     idt_init();
     mem_init();
 #endif /* __ARCH_X64__ */
@@ -50,7 +52,7 @@ void _start(void) {
 
     if (kern_addr_request.response == NULL) done();
 
-    LIMINE_WRITE("Welcome to flux!\n", 17);
+    LIMINE_WRITE("\x1b[32mWelcome to flux!\x1b[37m\n", 27);
 
     done();
 }

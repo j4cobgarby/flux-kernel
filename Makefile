@@ -11,7 +11,7 @@ all-hdd: $(IMG_PREF).hdd
 
 .PHONY: run
 run: $(IMG_PREF).iso
-	qemu-system-x86_64 -M q35 -m 2G -cdrom $< -boot d
+	qemu-system-x86_64 -M q35 -m 2G -cdrom $< -boot d -serial stdio -name Flux
 
 .PHONY: run-hdd
 run-hdd: $(IMG_PREF).hdd

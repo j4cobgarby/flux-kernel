@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "arch/x64/serial.h"
 #include "mem.h"
 #include "limine.h"
 #include "flux.h"
@@ -14,31 +15,19 @@ static volatile struct limine_memmap_request memmap_request= {
 int mem_init() {
     unsigned int newblock_count = 0;
     struct limine_memmap_response *resp = memmap_request.response;
-    char a[16];
     
     first_page_frame = NULL;
 
     if (!resp) return -1;
 
-    LIMINE_WRITE("Init mem\n", 9);
+    com_printf(*primary_com_port, "Initialising physical memory manager\n");
 
     for (uint64_t i = 0; i < resp->entry_count; i++) {
         struct limine_memmap_entry *entry = resp->entries[i];
 
 #ifdef DEBUG_PRINT_MEMMAP_ENTRIES
-        LIMINE_WRITE("Entry - Base: ", 14);
-
-        itoa_hex64(a, entry->base);
-        LIMINE_WRITE(a, 16);
-        LIMINE_WRITE(", Length: ", 10);
-
-        itoa_hex64(a, entry->length);
-        LIMINE_WRITE(a, 16);
-        LIMINE_WRITE(", Type: ", 8);
-
-        itoa_hex64(a, entry->type);
-        LIMINE_WRITE(a, 16);
-        LIMINE_WRITE("\n", 1);
+        com_printf(*primary_com_port, "Memory map entry: base: 0x%p, length: 0x%p, type: %d\n", 
+            entry->base, entry->length, entry->type);
 #endif
 
         if (entry->type == LIMINE_MEMMAP_USABLE) {
@@ -64,10 +53,7 @@ int mem_init() {
         }   
     }
 
-    LIMINE_WRITE("Found blocks: ", 14);
-    itoa_hex64(a, newblock_count);
-    LIMINE_WRITE(a, 16);
-    LIMINE_WRITE("\n", 1);
+    com_printf(*primary_com_port, "Added %d 4K blocks to the physical page frame list.\n", newblock_count);
 
     return newblock_count;
 }
