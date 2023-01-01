@@ -4,6 +4,6 @@ limine
 fluximage
 compile_commands.json
 *.o
-.iso
-.elf
+*.iso
+*.elf
 fluximage.iso
