@@ -31,10 +31,18 @@ static void done(void) {
 
 void _start(void) {
 #ifdef __ARCH_X64__
-    // Initialise the IDT, which the CPU uses to translate interrupt/exception
-    // vectors to the address of the handler of that interrupt.
+    /*  We initialise the serial console first so that, as soon as possible, we can
+        send debugging information to the host operating system (if running in a VM),
+        or an external computer (if running on hardware). */
     serial_init();
+
+    /*  Early on we need to initialise the IDT. This describes the code that is run
+        when the CPU encounters various interrupts and exceptions. */
     idt_init();
+
+    /*  Here we initialise the _physical_ memory management system. This deals with
+        allocating and freeing individual blocks of physical memory, and doesn't
+        deal at all with virtual address translation. */
     mem_init();
 #endif /* __ARCH_X64__ */
 
