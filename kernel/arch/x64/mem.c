@@ -66,6 +66,8 @@ void *get_phys_block() {
         first_page_frame = first_page_frame->next_frame;
     }
 
+    com_printf(*primary_com_port, "Allocated new physical block at 0x%p\n", ret);
+
     return ret;  
 }
 

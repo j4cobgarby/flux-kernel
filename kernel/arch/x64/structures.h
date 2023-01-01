@@ -14,6 +14,7 @@ Contributors: (add your name if you modify this file)
 #ifndef __INCLUDE_X64_STRUCTURES_H__
 #define __INCLUDE_X64_STRUCTURES_H__
 
+#include "flux.h"
 #include <stdint.h>
 
 /* A segment_selector_t type represents a segment selector, which is used all
@@ -122,5 +123,34 @@ struct isr_frame {
     uint64_t sp;
     uint64_t ss;
 } __attribute__((packed));
+
+typedef uint64_t register_cr3;
+
+typedef uint64_t pml4_entry_t;
+typedef uint64_t pdpt_entry_t;
+typedef uint64_t pdt_entry_t;
+typedef uint64_t pt_entry_t;
+
+#define PSE_PRESENT     1 << 0  // Set if this entry is present in the table.
+#define PSE_WRITEABLE   1 << 1  // If unset, this region of memory cannot be written to.
+#define PSE_USER_MODE   1 << 2  // If unset, usermode accesses are not allowed.
+#define PSE_PWT         1 << 3  //
+#define PSE_PCD         1 << 4  // 
+#define PSE_ACCESSED    1 << 5  // Set if this entry has been used for translation.
+#define PSE_PAGE_SIZE   1 << 7  // Valid for PDP table entry and PD table entry. 0 if this entry references another paging structure, or 1 if it maps a page.
+#define PSE_RESTART     1 << 11 // Used for HLAT paging, otherwise ignored. If set, restart translation as regular paging.
+#define PSE_NO_EXEC     1 << 63 // Used if EFER.NXE set. If this is set, execution of memory in the region controlled by this structure isn't allowed.
+#define PSE_DIRTY       1 << 6  // Valid in an entry that maps a page. Set by the CPU if memory in this page has been modified.
+#define PSE_PAT         1 << 7  // 
+#define PSE_GLOBAL      1 << 8  // 
+
+#define PSE_PTR(val) (val & 0x000ffffffffff000)
+
+#define CR3_BASE_ADDR(cr3) (cr3 & 0x000ffffffffff000)
+#define EXTRACT_PML4_INDEX(vaddr)   ((vaddr >> 39) & 0x1ff)
+#define EXTRACT_PDPT_INDEX(vaddr)   ((vaddr >> 30) & 0x1ff)
+#define EXTRACT_PDT_INDEX(vaddr)    ((vaddr >> 21) & 0x1ff)
+#define EXTRACT_PT_INDEX(vaddr)     ((vaddr >> 12) & 0x1ff)
+#define EXTRACT_OFFSET(vaddr)       (vaddr & 0xfff)
 
 #endif /* __INCLUDE_X64_STRUCTURES_H__ */

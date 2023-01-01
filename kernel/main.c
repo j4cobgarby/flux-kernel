@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include <stddef.h>
+#include "arch/x64/paging.h"
+#include "arch/x64/structures.h"
 #include "limine.h"
 #include "flux.h"
 
@@ -24,15 +26,6 @@ static volatile struct limine_kernel_address_request kern_addr_request = {
 static void done(void) {
     for (;;) {
         __asm__("hlt");
-    }
-}
-
-void itoa_hex64(char *buf, uint64_t num) {
-    static char lookup[] = "0123456789abcdef";
-
-    for (int i = 0; i < 16; i++) {
-        buf[15-i] = lookup[num & 0xf];
-        num >>= 4;
     }
 }
 
