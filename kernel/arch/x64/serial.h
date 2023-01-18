@@ -4,6 +4,12 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#ifdef PRINTK_COLOUR
+#define SERIAL "\x1b[36m( SERI) \x1b[37m"
+#else
+#define SERIAL "( PMEM) "
+#endif
+
 // Status of the com port.
 #define COM_PORT_STATUS_READY   0
 #define COM_PORT_STATUS_BROKEN  1
@@ -93,7 +99,5 @@ char com_read(struct com_port);
 
 /*  Blocking, read chars from a given com port into a buffer, until a delimeter is read. */
 void com_reads(struct com_port, char *buff, char delim);
-
-void com_printf(struct com_port, char *fmt, ...);
 
 #endif /* __ARCH_X64_SERIAL_H__ */

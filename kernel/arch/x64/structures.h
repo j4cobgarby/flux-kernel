@@ -153,4 +153,20 @@ typedef uint64_t pt_entry_t;
 #define EXTRACT_PT_INDEX(vaddr)     ((vaddr >> 12) & 0x1ff)
 #define EXTRACT_OFFSET(vaddr)       (vaddr & 0xfff)
 
+struct tss_long {
+    uint32_t _0;
+    uint64_t rsp0;
+    uint64_t rsp1;
+    uint64_t rsp2;
+    uint64_t _1;
+    uint64_t ist1;
+    uint64_t ist2;
+    uint64_t ist3;
+    uint64_t ist4;
+    uint64_t ist5;
+    uint64_t ist6;
+    uint64_t ist7;
+    uint64_t _2;
+};
+
 #endif /* __INCLUDE_X64_STRUCTURES_H__ */

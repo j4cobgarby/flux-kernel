@@ -20,13 +20,13 @@ int mem_init() {
 
     if (!resp) return -1;
 
-    com_printf(*primary_com_port, "Initialising physical memory manager\n");
+    printk(PMEM "Initialising physical memory manager\n");
 
     for (uint64_t i = 0; i < resp->entry_count; i++) {
         struct limine_memmap_entry *entry = resp->entries[i];
 
 #ifdef DEBUG_PRINT_MEMMAP_ENTRIES
-        com_printf(*primary_com_port, "Memory map entry: base: 0x%p, length: 0x%p, type: %d\n", 
+        printk(PMEM "Memory map entry: base: 0x%p, length: 0x%p, type: %d\n", 
             entry->base, entry->length, entry->type);
 #endif
 
@@ -53,7 +53,7 @@ int mem_init() {
         }   
     }
 
-    com_printf(*primary_com_port, "Added %d 4K blocks to the physical page frame list.\n", newblock_count);
+    printk(PMEM PGOOD("Added %d 4K blocks to the physical page frame list.\n"), newblock_count);
 
     return newblock_count;
 }
@@ -66,7 +66,9 @@ void *get_phys_block() {
         first_page_frame = first_page_frame->next_frame;
     }
 
-    com_printf(*primary_com_port, "Allocated new physical block at 0x%p\n", ret);
+#ifdef DEBUG_SHOW_PMEM_ALLOCATIONS
+    printk(PMEM "Allocated new physical block at 0x%p\n", ret);
+#endif
 
     return ret;  
 }

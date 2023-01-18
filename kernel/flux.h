@@ -1,8 +1,17 @@
 #ifndef __INCLUDE_FLUX_H__
 #define __INCLUDE_FLUX_H__
 
-#include "limine.h"
 #include <stdint.h>
+#include "limine.h"
+
+#include "generic/printk.h"
+
+#define STR_(x) #x
+#define STR(x) STR_(x)
+
+#define FLUX_VERS_MAJOR 0
+#define FLUX_VERS_MINOR 1
+#define FLUX_VERS_STRING "v" STR(FLUX_VERS_MAJOR) "." STR(FLUX_VERS_MINOR)
 
 extern volatile struct limine_terminal_request flux_terminal_request;
 #define LIMINE_WRITE(msg, len) flux_terminal_request.response->write(flux_terminal_request.response->terminals[0], msg, len)

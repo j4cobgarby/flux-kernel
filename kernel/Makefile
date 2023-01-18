@@ -37,7 +37,9 @@ override CFLAGS +=       \
     -mcmodel=kernel      \
     -I.                  \
     -D__ARCH_$(ARCH)__   \
-    -DDEBUG_PRINT_MEMMAP_ENTRIES
+    -DPRINTK_COLOUR \
+    -DPRETTY_LOGO \
+#    -DDEBUG_PRINT_MEMMAP_ENTRIES \
 
 # Internal linker flags that should not be changed by the user.
 override LDFLAGS +=         \

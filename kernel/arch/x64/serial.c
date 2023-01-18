@@ -1,4 +1,5 @@
 #include "serial.h"
+#include "generic/debug.h"
 #include "io.h"
 #include "flux.h"
 
@@ -27,12 +28,17 @@ void serial_init() {
             LIMINE_WRITE("Found working UART\n", 19);
 
             // And send a message to the com port too
-            com_printf(com_ports[i], "Flux detected you as a working UART com port (IO base %x)\n", 
+            printk(SERIAL PGOOD("Detected as working UART com port (IO base %x)\n"), 
                 com_ports[i].io_port_base);
         }
     }
 
-    com_printf(*primary_com_port, "#### Flux serial console initialised!\n");
+    if (!primary_com_port) {
+        LIMINE_WRITE("Fatal Error: No working UART found.\n", 23);
+        for (;;);
+    }
+
+    printk(SERIAL "Flux serial console initialised!\n");
 }
 
 int com_port_setup(struct com_port *port, uint16_t divisor) {
@@ -107,84 +113,5 @@ void com_reads(struct com_port port, char *buff, char delim) {
 
     while ((c = com_read(port)) != delim) {
         *buff++ = c;
-    }
-}
-
-void com_printhex(struct com_port port, uint64_t x, int leading, int spacers) {
-    static char hexdigits[] = "0123456789abcdef";
-
-    for (int i = 15; i >= 0; i--) {
-        int ind = (x >> 4 * i) & 0xf;
-
-        if (ind && !leading) leading = 1;
-        if (leading) {
-            if (spacers && i != 15 && (i+1) % 4 == 0) com_send(port, ',');
-            com_send(port, hexdigits[ind]);
-        }
-    }
-}
-
-void com_printdec(struct com_port port, int64_t x) {
-    // 20 chars is enough to fit the largest 64 bit integer
-    char buf[20] = {0};
-    int leading = 0;
-
-    for (int i = 19; x; x /= 10, i--) {
-        buf[i] = x % 10;
-    }
-
-    for (int i = 0; i < 20; i++) {
-        if (buf[i] && !leading) leading = 1;
-        if (leading || i == 19) {
-            com_send(port, '0' + buf[i]);
-        }
-    }
-}
-
-void com_printf(struct com_port port, char *fmt, ...) {
-    va_list ap;
-
-    uint64_t u64_val;
-    int64_t i64_val;
-    char ch_val;
-    char *sp_val;
-
-    va_start(ap, fmt);
-    while (*fmt) {
-        if (*fmt != '%') {
-            com_send(port, *fmt);
-        } else {
-            switch (*(++fmt)) {
-            case '\0':
-                return;
-            case 'x':
-                u64_val = va_arg(ap, uint64_t);
-                com_printhex(port, u64_val, 0, 0);
-                break;
-            case 'd':
-                i64_val = va_arg(ap, int64_t);
-                com_printdec(port, i64_val);
-                break;
-            case 'u':
-                u64_val = va_arg(ap, uint64_t);
-                com_printdec(port, u64_val);
-                break;
-            case 'p':
-                u64_val = va_arg(ap, uint64_t);
-                com_printhex(port, u64_val, 1, 1);
-                break;
-            case 'c':
-                ch_val = (char)va_arg(ap, int);
-                com_send(port, ch_val);
-                break;
-            case 's':
-                sp_val = va_arg(ap, char*);
-                com_sends(port, sp_val);
-                break;
-            default:
-                break;
-            }
-        }
-        fmt++;
     }
 }

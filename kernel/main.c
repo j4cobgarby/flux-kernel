@@ -1,11 +1,15 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "arch/x64/paging.h"
-#include "arch/x64/structures.h"
+#include "generic/debug.h"
+#include "generic/printk.h"
 #include "limine.h"
 #include "flux.h"
+#include "generic/scheduler.h"
 
 #ifdef __ARCH_X64__
+#include "arch/x64/paging.h"
+#include "arch/x64/structures.h"
+#include "arch/x64/thread_x64.h"
 #include "arch/x64/idt.h"
 #include "arch/x64/mem.h"
 #include "arch/x64/serial.h"
@@ -46,6 +50,8 @@ void _start(void) {
     mem_init();
 #endif /* __ARCH_X64__ */
 
+    scheduler_init();
+
     if (flux_terminal_request.response == NULL
         || flux_terminal_request.response->terminal_count < 1) {
         done();
@@ -53,7 +59,32 @@ void _start(void) {
 
     if (kern_addr_request.response == NULL) done();
 
-    LIMINE_WRITE("\x1b[32mWelcome to flux!\x1b[37m\n", 27);
+    printk(PGOOD("Flux Kernel initialised successfully!\n"));
+    printk("Kernel " FLUX_VERS_STRING "\n");
+    printk("By Jacob Garby <j4cobgarby@gmail.com>\n");
+#ifdef PRETTY_LOGO
+    printk("\
+                     .'                                   ..                    \n\
+                .'.  oKkl.                           .'.  ,;;,.                 \n\
+             .;lxk;  oNXXc                         ;dOO,  .;:::.                \n\
+         .,:okOOOx'  oNXX:                        .kXX0,   .:;:,     ..         \n\
+      .;lxOOOOxl;.   oNXX:                 ..     .kXX0,    ,:;:.   ;;:;'       \n\
+   .:okOOOkoc,.      oNXX:             .:lx0:     .kXX0,    .:::;  ,::::;       \n\
+   l0OOkl;.          oNXX:             oNNXK:     .kXX0,     ':;:',:;;:;        \n\
+   lO0Ol         .   oNXX:             dNNXK:     .kXX0,      ;:::::::;.        \n\
+   oO0Oc     .':ox,  oNNX:             dNNXK:     .kXX0,      .:;;;;:;.         \n\
+   oO0Oc  .;ldkOOk,  oNXX:             dNNXK:     .kXX0,      .;:;;:;.          \n\
+   oO0Od:okOOOkdc,   oNXXc             dNNXX:     .kXX0,      ,:::;:.           \n\
+   oO0OOOOOxl;.      :xk0c             dNNXX:     .kXX0,     ,::::::,           \n\
+   l0OOkdc,.         :cccl:,.          dNNXX:     'kK0k,    ':;;:;:;:.          \n\
+   lO0Ol             .,:ccccl:;'.     .dNNXK:  .,cdOOOk,   ':;,;;':;:;          \n\
+   oO0Oc                .';clcccc:,.  .dNNXKo;lxOOOOdl,.  ':;,;:. ':;:'         \n\
+   oO0Oc                   .',:ccccl' .oNXK0OOOOko:'.     .;;::.   ;:;:.        \n\
+   oO0Oc                       .,;co' .lK0kOOxl;.            ..    .:;:,        \n\
+   oKxl.                          ... .lKOo:'.                      ,:;:.       \n\
+   ..                                  .,.                          .';;:.      \n\
+                                                                       ...      \n");
+#endif
 
     done();
 }

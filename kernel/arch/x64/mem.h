@@ -17,6 +17,12 @@ Contributors: (add your name if you modify this file)
 #include "structures.h"
 #include "limine.h"
 
+#ifdef PRINTK_COLOUR
+#define PMEM "\x1b[36m( PMEM) \x1b[37m"
+#else
+#define PMEM "( PMEM) "
+#endif
+
 /*  This structure will be present at the beginning of each page frame in memory
     so that, starting from the (logically) first, a frame can be taken and the
     next one in the list can be found. */

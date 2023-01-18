@@ -33,7 +33,7 @@ void zero_paging_structure(uint64_t table[512]) {
     the final page table. When we do, we set the relevant pointer in the page table
     to point to the physical address we want to map to. */
 void map_page(flux_phyaddr paddr, flux_virtaddr vaddr, unsigned int flags) {
-    com_printf(*primary_com_port, "Mapping vaddr 0x%p to paddr 0x%p\n", vaddr, paddr);
+    printk(PAGING "Mapping vaddr 0x%p to paddr 0x%p\n", vaddr, paddr);
 
     // To find the index in the PML4 which is responsible for, extract the index
     // from the virtual address.
