@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "arch/x64/serial.h"
+#include "generic/debug.h"
 #include "mem.h"
 #include "limine.h"
 #include "flux.h"
@@ -81,4 +82,8 @@ void put_phys_block(void *b_addr) {
     };
 
     first_page_frame = new_block;
+}
+
+void *get_consecutive_phys_blocks(unsigned int n) {
+    ERROR("Function not implemented!"); // TODO
 }

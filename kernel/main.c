@@ -17,11 +17,6 @@
 #error Unkown architecture
 #endif
 
-volatile struct limine_terminal_request flux_terminal_request = {
-    .id = LIMINE_TERMINAL_REQUEST,
-    .revision = 0
-};
-
 static volatile struct limine_kernel_address_request kern_addr_request = {
     .id = LIMINE_KERNEL_ADDRESS_REQUEST,
     .revision = 0
@@ -34,6 +29,7 @@ static void done(void) {
 }
 
 void _start(void) {
+    // Some architecture-specific initialisation
 #ifdef __ARCH_X64__
     /*  We initialise the serial console first so that, as soon as possible, we can
         send debugging information to the host operating system (if running in a VM),
@@ -43,19 +39,17 @@ void _start(void) {
     /*  Early on we need to initialise the IDT. This describes the code that is run
         when the CPU encounters various interrupts and exceptions. */
     idt_init();
+#endif /* __ARCH_X64__ */
 
     /*  Here we initialise the _physical_ memory management system. This deals with
         allocating and freeing individual blocks of physical memory, and doesn't
-        deal at all with virtual address translation. */
+        deal at all with virtual address translation. 
+        The reason this function, although different arch-to-arch, is not in the
+        arch specific block of initialisation functions, is that every architecture
+        implementation is required to implement this function, for compatibility. */
     mem_init();
-#endif /* __ARCH_X64__ */
 
     scheduler_init();
-
-    if (flux_terminal_request.response == NULL
-        || flux_terminal_request.response->terminal_count < 1) {
-        done();
-    }
 
     if (kern_addr_request.response == NULL) done();
 

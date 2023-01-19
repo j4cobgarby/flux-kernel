@@ -51,4 +51,9 @@ void *get_phys_block();
     again */
 void put_phys_block(void *);
 
+/*  Attempt to find `n` consecutive blocks of memory, and reserve them, returning
+    the address of the first of the blocks. If there are no suitable blocks to be
+    found, return NULL. */
+void *get_consecutive_phys_blocks(unsigned int n);
+
 #endif

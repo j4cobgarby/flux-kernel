@@ -1,6 +1,7 @@
 #ifndef __GENERIC_SCHEDULER_H__
 #define __GENERIC_SCHEDULER_H__
 
+#include "arch/x64/structures.h"
 #include <stddef.h>
 
 #ifdef __ARCH_X64__
@@ -30,6 +31,7 @@ struct task {
     /* Saved Data */
 #ifdef __ARCH_X64__
     struct processor_regs regs;
+    pml4_entry_t *pml4_table;
 #endif
 
     // This is where in the future, other values such as the user that ran it, its working directory,

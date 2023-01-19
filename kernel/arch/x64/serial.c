@@ -24,9 +24,6 @@ void serial_init() {
         if (com_port_setup(&com_ports[i], 3) == 0) {
             if (!primary_com_port) primary_com_port = &(com_ports[i]);
 
-            // Say about the working com port to the screen
-            LIMINE_WRITE("Found working UART\n", 19);
-
             // And send a message to the com port too
             printk(SERIAL PGOOD("Detected as working UART com port (IO base %x)\n"), 
                 com_ports[i].io_port_base);
@@ -34,8 +31,7 @@ void serial_init() {
     }
 
     if (!primary_com_port) {
-        LIMINE_WRITE("Fatal Error: No working UART found.\n", 23);
-        for (;;);
+        for (;;) __asm__ volatile ("hlt");
     }
 
     printk(SERIAL "Flux serial console initialised!\n");
