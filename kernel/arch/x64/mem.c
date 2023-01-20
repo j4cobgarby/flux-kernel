@@ -1,10 +1,11 @@
+#include "flux.h"
+
 #include <stdlib.h>
 
 #include "arch/x64/serial.h"
 #include "generic/debug.h"
 #include "mem.h"
 #include "limine.h"
-#include "flux.h"
 
 struct frame_marker *first_page_frame;
 
@@ -21,7 +22,7 @@ int mem_init() {
 
     if (!resp) return -1;
 
-    printk(PMEM "Initialising physical memory manager\n");
+    printk(SYSTEM_PMEM "Initialising physical memory manager\n");
 
     for (uint64_t i = 0; i < resp->entry_count; i++) {
         struct limine_memmap_entry *entry = resp->entries[i];
@@ -54,7 +55,7 @@ int mem_init() {
         }   
     }
 
-    printk(PMEM PGOOD("Added %d 4K blocks to the physical page frame list.\n"), newblock_count);
+    printk(SYSTEM_PMEM PGOOD("Added %d 4K blocks to the physical page frame list.\n"), newblock_count);
 
     return newblock_count;
 }
@@ -68,7 +69,7 @@ void *get_phys_block() {
     }
 
 #ifdef DEBUG_SHOW_PMEM_ALLOCATIONS
-    printk(PMEM "Allocated new physical block at 0x%p\n", ret);
+    printk(SYSTEM_PMEM "Allocated new physical block at 0x%p\n", ret);
 #endif
 
     return ret;  

@@ -1,3 +1,5 @@
+#include "flux.h"
+
 #include "printk.h"
 
 void kputs(const char *restrict str) {

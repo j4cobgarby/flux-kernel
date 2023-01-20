@@ -1,9 +1,10 @@
 #ifndef __ARCH_X64_PAGING_H__
 #define __ARCH_X64_PAGING_H__
 
+#include "flux.h"
+
 #include <stdint.h>
 #include "arch/x64/structures.h"
-#include "flux.h"
 
 #ifdef PRINTK_COLOUR
 #define PAGING "\x1b[36m( PAGE) \x1b[37m"

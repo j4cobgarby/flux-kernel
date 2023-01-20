@@ -1,6 +1,8 @@
 #ifndef __GENERIC_DEBUG_H__
 #define __GENERIC_DEBUG_H__
 
+#include "flux.h"
+
 #include "generic/printk.h"
 
 #define ASSERT(x) \

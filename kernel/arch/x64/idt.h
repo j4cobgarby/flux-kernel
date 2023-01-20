@@ -1,6 +1,8 @@
 #ifndef __INCLUDE_X64_IDT_H__
 #define __INCLUDE_X64_IDT_H__
 
+#include "flux.h"
+
 #include "structures.h"
 
 void idt_init();

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "limine.h"
 
-#include "generic/printk.h"
+#include "config.h"
 
 #define STR_(x) #x
 #define STR(x) STR_(x)

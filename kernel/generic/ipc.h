@@ -1,6 +1,8 @@
 #ifndef __GENERIC_IPC_H__
 #define __GENERIC_IPC_H__
 
+#include "flux.h"
+
 #include <stdint.h>
 #include <stddef.h>
 

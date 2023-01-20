@@ -1,3 +1,5 @@
+#include "flux.h"
+
 #include "idt.h"
 #include "structures.h"
 
@@ -8,7 +10,7 @@ void idt_init() {
 
     // Entry 5 in the GDT is 64 bit code, defined by the Limine loader.
     // The privilege level that these functions execute at is ring 0.
-    segment_selector_t isr_seg = INIT_SEGMENT_SELECTOR(0, 0, 5);
+    segment_selector_t isr_seg = INIT_SEGMENT_SELECTOR(0, 0, 1);
 
     idt_attach_handler(0x02, isr_seg, INIT_IDT_ATTRIBUTES(0, IDT_ATTRIBUTES_TYPE_INTERRUPT, 0), &isr_NMI);
     idt_attach_handler(0x32, isr_seg, INIT_IDT_ATTRIBUTES(0, IDT_ATTRIBUTES_TYPE_INTERRUPT, 0), &isr_SYSCALL);

@@ -1,3 +1,5 @@
+#include "flux.h"
+
 #include "generic/scheduler.h"
 #include "generic/debug.h"
 #include "generic/printk.h"

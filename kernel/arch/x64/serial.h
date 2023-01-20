@@ -1,6 +1,8 @@
 #ifndef __ARCH_X64_SERIAL_H__
 #define __ARCH_X64_SERIAL_H__
 
+#include "flux.h"
+
 #include <stdlib.h>
 #include <stdint.h>
 

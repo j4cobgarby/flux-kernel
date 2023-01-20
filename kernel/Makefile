@@ -36,10 +36,9 @@ override CFLAGS +=       \
     -mno-red-zone        \
     -mcmodel=kernel      \
     -I.                  \
+    -Wno-unused-parameter\
+    -Wno-unused-function \
     -D__ARCH_$(ARCH)__   \
-    -DPRINTK_COLOUR \
-    -DPRETTY_LOGO \
-#    -DDEBUG_PRINT_MEMMAP_ENTRIES \
 
 # Internal linker flags that should not be changed by the user.
 override LDFLAGS +=         \

@@ -1,6 +1,8 @@
 #ifndef __GENERIC_SCHEDULER_H__
 #define __GENERIC_SCHEDULER_H__
 
+#include "flux.h"
+
 #include "arch/x64/structures.h"
 #include <stddef.h>
 
@@ -8,11 +10,7 @@
     #include "arch/x64/thread_x64.h"
 #endif
 
-#ifdef PRINTK_COLOUR
-#define SCHED "\x1b[36m(SCHED) \x1b[37m"
-#else
-#define SCHED "(SCHED) "
-#endif
+#define SCHED PACCENT("(SCHED) ")
 
 enum sched_state {
     RUNNING,

@@ -1,7 +1,8 @@
+#include "flux.h"
+
 #include "serial.h"
 #include "generic/debug.h"
 #include "io.h"
-#include "flux.h"
 
 #include <stdarg.h>
 #include <stdint.h>

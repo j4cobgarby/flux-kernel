@@ -1,9 +1,11 @@
+#include "flux.h"
+
 #include <stdint.h>
 #include <stddef.h>
+
 #include "generic/debug.h"
 #include "generic/printk.h"
 #include "limine.h"
-#include "flux.h"
 #include "generic/scheduler.h"
 
 #ifdef __ARCH_X64__
@@ -13,6 +15,7 @@
 #include "arch/x64/idt.h"
 #include "arch/x64/mem.h"
 #include "arch/x64/serial.h"
+#include "arch/x64/gdt.h"
 #else
 #error Unkown architecture
 #endif
@@ -35,6 +38,10 @@ void _start(void) {
         send debugging information to the host operating system (if running in a VM),
         or an external computer (if running on hardware). */
     serial_init();
+
+    /*  Although Limine actually loads a valid GDT for us, we want to load and have
+        control over our own. This way, we can add entries to it when needed. */
+    gdt_init();
 
     /*  Early on we need to initialise the IDT. This describes the code that is run
         when the CPU encounters various interrupts and exceptions. */

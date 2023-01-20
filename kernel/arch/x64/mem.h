@@ -12,16 +12,13 @@ Contributors: (add your name if you modify this file)
 #ifndef __ARCH_X64_MEM_H__
 #define __ARCH_X64_MEM_H__
 
-#include <stdint.h>
 #include "flux.h"
+
+#include <stdint.h>
 #include "structures.h"
 #include "limine.h"
 
-#ifdef PRINTK_COLOUR
-#define PMEM "\x1b[36m( PMEM) \x1b[37m"
-#else
-#define PMEM "( PMEM) "
-#endif
+#define SYSTEM_PMEM PACCENT("( PMEM) ")
 
 /*  This structure will be present at the beginning of each page frame in memory
     so that, starting from the (logically) first, a frame can be taken and the

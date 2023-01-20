@@ -114,6 +114,10 @@ struct idt_descriptor {
     .idt_size = (n_entries * sizeof(struct idt_entry)) - 1, \
 })
 
+struct gdt_entry {
+
+};
+
 /* 
  */
 struct isr_frame {
@@ -167,6 +171,42 @@ struct tss_long {
     uint64_t ist6;
     uint64_t ist7;
     uint64_t _2;
-};
+} __attribute__((packed));
+
+struct gdt_descriptor_long {
+    uint16_t limit_0_15;
+    uint16_t base_0_15;
+    uint8_t  base_16_23;
+    uint8_t  access_byte;
+    uint8_t  limit_16_19_and_flags;
+    uint8_t  base_24_31;
+} __attribute__((packed));
+
+struct gdtr_image {
+    uint16_t limit;
+    struct gdt_descriptor_long *base;
+} __attribute__((packed));
+
+#define INIT_SEG_DESCRIPTOR(base, limit, access, flags) \
+    (struct gdt_descriptor_long) { \
+        .limit_0_15 = (limit) & 0xffff, \
+        .base_0_15  = (base) & 0xffff, \
+        .base_16_23 = ((base)>>16) & 0xff, \
+        .access_byte = (access) & 0xff, \
+        .limit_16_19_and_flags = (((limit)>>16) & 0xf) | (((flags) & 0xf) << 4), \
+        .base_24_31 = ((base)>>24) & 0xff, \
+    }
+
+#define SEG_AB_ACCESSED 1 << 0
+#define SEG_AB_RW       1 << 1
+#define SEG_AB_DC       1 << 2
+#define SEG_AB_EXEC     1 << 3  // If set, this segment is executable.
+#define SEG_AB_CODE_DATA 1 << 4 // If set, this segment is code/data, otherwise it's some sort of system segment
+#define SEG_AB_DPL(n)   ((n & 0x3) << 5)
+#define SEG_AB_PRESENT  1 << 7 // Must be set for any valid segment
+
+#define SEG_FLAG_LONG       1 << 1 // Set for a 64 bit code segment
+#define SEG_FLAG_DB         1 << 2 // Size of segment, set for 32 bit
+#define SEG_FLAG_4K_BLOCKS  1 << 3
 
 #endif /* __INCLUDE_X64_STRUCTURES_H__ */

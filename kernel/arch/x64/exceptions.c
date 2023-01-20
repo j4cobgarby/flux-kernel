@@ -1,3 +1,5 @@
+#include "flux.h"
+
 #include "idt.h"
 
 INTERRUPT_HANDLER isr_DE(struct isr_frame *frame){

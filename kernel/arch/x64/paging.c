@@ -1,8 +1,10 @@
+#include "flux.h"
+
 #include "paging.h"
 #include "arch/x64/mem.h"
 #include "arch/x64/structures.h"
-#include "flux.h"
 #include "serial.h"
+#include "generic/printk.h"
 
 #include <cpuid.h>
 

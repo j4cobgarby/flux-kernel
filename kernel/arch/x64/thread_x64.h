@@ -1,6 +1,8 @@
 #ifndef __ARCH_X64_THREAD_H__
 #define __ARCH_X64_THREAD_H__
 
+#include "flux.h"
+
 #include <stdint.h>
 
 struct processor_regs {

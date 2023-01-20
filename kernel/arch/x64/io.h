@@ -1,6 +1,8 @@
 #ifndef __ARCH_X64_IO_H__
 #define __ARCH_X64_IO_H__
 
+#include "flux.h"
+
 #include <stdint.h>
 
 inline uint8_t inb(uint16_t port) {
