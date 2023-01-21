@@ -114,10 +114,6 @@ struct idt_descriptor {
     .idt_size = (n_entries * sizeof(struct idt_entry)) - 1, \
 })
 
-struct gdt_entry {
-
-};
-
 /* 
  */
 struct isr_frame {
@@ -171,6 +167,8 @@ struct tss_long {
     uint64_t ist6;
     uint64_t ist7;
     uint64_t _2;
+    uint16_t _3;
+    uint16_t io_map_base_address;
 } __attribute__((packed));
 
 struct gdt_descriptor_long {

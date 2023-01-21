@@ -3,9 +3,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "limine.h"
+
 #include "generic/debug.h"
 #include "generic/printk.h"
-#include "limine.h"
 #include "generic/scheduler.h"
 
 #ifdef __ARCH_X64__
@@ -60,9 +61,7 @@ void _start(void) {
 
     if (kern_addr_request.response == NULL) done();
 
-    printk(PGOOD("Flux Kernel initialised successfully!\n"));
-    printk("Kernel " FLUX_VERS_STRING "\n");
-    printk("By Jacob Garby <j4cobgarby@gmail.com>\n");
+    printk(PGOOD("Flux Kernel " FLUX_VERS_STRING " initialised successfully!\n"));
 #ifdef PRETTY_LOGO
     printk("\
                      .'                                   ..                    \n\
