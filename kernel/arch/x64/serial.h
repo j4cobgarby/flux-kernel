@@ -6,12 +6,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#ifdef PRINTK_COLOUR
-#define SERIAL "\x1b[36m( SERI) \x1b[37m"
-#else
-#define SERIAL "( PMEM) "
-#endif
-
 // Status of the com port.
 #define COM_PORT_STATUS_READY   0
 #define COM_PORT_STATUS_BROKEN  1

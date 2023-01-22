@@ -6,14 +6,12 @@
 #include <stdint.h>
 #include "arch/x64/structures.h"
 
-#ifdef PRINTK_COLOUR
-#define PAGING "\x1b[36m( PAGE) \x1b[37m"
-#else
-#define PAGING "( PAGE) "
-#endif
+extern pml4_entry_t *kernel_pml4_table;
 
 register_cr3 read_cr3();
+void set_cr3(register_cr3 val);
 
 void map_page(flux_phyaddr paddr, flux_virtaddr vaddr, unsigned int flags);
+void map_page_specific_pml4(pml4_entry_t *pml4_addr, flux_phyaddr paddr, flux_virtaddr vaddr, unsigned int flags);
 
 #endif /* __ARCH_X64_PAGING_H__ */

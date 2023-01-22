@@ -20,7 +20,7 @@ void scheduler_init() {
         tasks[i].present = 0;
     }
 
-    printk(SCHED "Initialised task scheduler.\n");
+    printk(SYSTEM_SCHED "Initialised task scheduler.\n");
 }
 
 

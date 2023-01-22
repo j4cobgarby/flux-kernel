@@ -26,7 +26,7 @@ void serial_init() {
             if (!primary_com_port) primary_com_port = &(com_ports[i]);
 
             // And send a message to the com port too
-            printk(SERIAL PGOOD("Detected as working UART com port (IO base %x)\n"), 
+            printk(SYSTEM_SERIAL PGOOD("Detected as working UART com port (IO base %x)\n"), 
                 com_ports[i].io_port_base);
         }
     }
@@ -35,7 +35,7 @@ void serial_init() {
         for (;;) __asm__ volatile ("hlt");
     }
 
-    printk(SERIAL "Flux serial console initialised!\n");
+    printk(SYSTEM_SERIAL "Flux serial console initialised!\n");
 }
 
 int com_port_setup(struct com_port *port, uint16_t divisor) {

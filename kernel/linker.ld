@@ -1,12 +1,13 @@
-/* Tell the linker that we want an x86_64 ELF64 output file */
+/*  The linker script tells the compiler how to construct the final "executable".
+    Of course it's not a normal executable, but it is an elf64 format.
+    The bootloader (Limine) uses the information in the generated elf file to
+    know where to load our kernel */
+
 OUTPUT_FORMAT(elf64-x86-64)
 OUTPUT_ARCH(i386:x86-64)
 
-/* We want the symbol _start to be our entry point */
 ENTRY(_start)
 
-/* Define the program headers we want so the bootloader gives us the right */
-/* MMU permissions */
 PHDRS
 {
     text    PT_LOAD    FLAGS((1 << 0) | (1 << 2)) ; /* Execute + Read */

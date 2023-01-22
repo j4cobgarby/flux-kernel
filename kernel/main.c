@@ -40,6 +40,11 @@ void _start(void) {
         or an external computer (if running on hardware). */
     serial_init();
 
+    /*  Here we initialise the _physical_ memory management system. This deals with
+        allocating and freeing individual blocks of physical memory, and doesn't
+        deal at all with virtual address translation. */
+    mem_init();
+
     /*  Although Limine actually loads a valid GDT for us, we want to load and have
         control over our own. This way, we can add entries to it when needed. */
     gdt_init();
@@ -48,14 +53,6 @@ void _start(void) {
         when the CPU encounters various interrupts and exceptions. */
     idt_init();
 #endif /* __ARCH_X64__ */
-
-    /*  Here we initialise the _physical_ memory management system. This deals with
-        allocating and freeing individual blocks of physical memory, and doesn't
-        deal at all with virtual address translation. 
-        The reason this function, although different arch-to-arch, is not in the
-        arch specific block of initialisation functions, is that every architecture
-        implementation is required to implement this function, for compatibility. */
-    mem_init();
 
     scheduler_init();
 
@@ -66,7 +63,7 @@ void _start(void) {
     printk("\
                      .'                                   ..                    \n\
                 .'.  oKkl.                           .'.  ,;;,.                 \n\
-             .;lxk;  oNXXc                         ;dOO,  .;:::.                \n\
+             .;lxk;  oNXX:                         ;dOO,  .;:::.                \n\
          .,:okOOOx'  oNXX:                        .kXX0,   .:;:,     ..         \n\
       .;lxOOOOxl;.   oNXX:                 ..     .kXX0,    ,:;:.   ;;:;'       \n\
    .:okOOOkoc,.      oNXX:             .:lx0:     .kXX0,    .:::;  ,::::;       \n\

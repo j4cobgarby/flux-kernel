@@ -13,8 +13,6 @@
 
 #include "structures.h"
 
-#define SYSTEM_GDT PACCENT("(  GDT) ")
-
 extern struct gdt_descriptor_long gdt_table[];
 
 extern void load_gdt(void);

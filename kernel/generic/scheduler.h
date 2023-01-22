@@ -10,8 +10,6 @@
     #include "arch/x64/thread_x64.h"
 #endif
 
-#define SCHED PACCENT("(SCHED) ")
-
 enum sched_state {
     RUNNING,
     BLOCKED,

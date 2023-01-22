@@ -8,7 +8,6 @@ extern reload_seg_registers
 
 load_gdt:
     cli
-    xchg bx, bx
     lgdt [gdtr]
     ret
 

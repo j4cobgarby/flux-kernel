@@ -18,8 +18,6 @@ Contributors: (add your name if you modify this file)
 #include "structures.h"
 #include "limine.h"
 
-#define SYSTEM_PMEM PACCENT("( PMEM) ")
-
 /*  This structure will be present at the beginning of each page frame in memory
     so that, starting from the (logically) first, a frame can be taken and the
     next one in the list can be found. */
@@ -36,7 +34,7 @@ extern struct frame_marker *first_page_frame;
     Returns a negative value if it failed, in which case the system should just
     halt.
     On success, returns the number of blocks found that are usable right now. */
-int mem_init();
+unsigned long int mem_init();
 
 /*  Take the first available block of physical memory (4KB) from the linked list
     of blocks (essentially, `first_page_frame`), and update the linked list

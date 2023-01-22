@@ -9,10 +9,18 @@
 // #define PRETTY_LOGO
 
 // Set if Flux should print each region of memory that it is told about by Limine.
-// #define DEBUG_PRINT_MEMMAP_ENTRIES
+#define DEBUG_PRINT_MEMMAP_ENTRIES
 
 // Set if Flux should print a message each time a physical block of memory is
-// allocatd.
+// allocated.
 // #define DEBUG_SHOW_PMEM_ALLOCATIONS
+
+// Set if Flux should print a message each time a virtual address is mapped to
+// a physical page.
+#define DEBUG_PRINT_ON_PAGE_MAP
+
+// Set if Flux should print a message each time a page mapping function leads to a
+// newly allocated page structure.
+#define DEBUG_PRINT_ON_NEW_PAGE_STRUCTURE
 
 #endif /* __INCLUDE_CONFIG_H__ */
