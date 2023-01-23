@@ -67,6 +67,16 @@ void setup_kernel_map() {
             }
         }
     }
+
+    // Map the first 4GiB of physical memory to virtual memory starting at the
+    // start of higher half memory
+    
+    struct limine_hhdm_response *hhdm_response = hhdm_request.response;
+    printk("HHDM Offset = 0x%p\n", hhdm_response->offset);
+
+    for (uint64_t p = 0; p < 0x100000000; p += 4096) {
+        map_page_specific_pml4(kernel_pml4_table, p, hhdm_response->offset + p, PSE_WRITEABLE);
+    }
 }
 
 unsigned long int mem_init() {

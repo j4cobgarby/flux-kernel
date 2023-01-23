@@ -30,6 +30,15 @@ void zero_paging_structure(uint64_t *table) {
     }
 }
 
+void paging_init() {
+    /*  At this point we expect that mem_init has been called already, so the
+        kernel's paging structure should already be set up starting at
+        kernel_pml4_table. */
+
+    __asm__ volatile ("xchg %bx, %bx");
+    set_cr3(CR3_BASE_ADDR((flux_phyaddr)kernel_pml4_table));
+}
+
 /*  This function "maps" a virtual address to a physical address using the 4-level
     paging scheme. It works by starting at the top level paging structure table
     (the pml4 table) and getting the entry at a certain index into that table. The

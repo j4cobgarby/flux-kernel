@@ -17,7 +17,7 @@
 
 // Set if Flux should print a message each time a virtual address is mapped to
 // a physical page.
-#define DEBUG_PRINT_ON_PAGE_MAP
+//#define DEBUG_PRINT_ON_PAGE_MAP
 
 // Set if Flux should print a message each time a page mapping function leads to a
 // newly allocated page structure.

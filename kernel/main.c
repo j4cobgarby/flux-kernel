@@ -45,6 +45,8 @@ void _start(void) {
         deal at all with virtual address translation. */
     mem_init();
 
+    paging_init();
+
     /*  Although Limine actually loads a valid GDT for us, we want to load and have
         control over our own. This way, we can add entries to it when needed. */
     gdt_init();
