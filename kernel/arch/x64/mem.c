@@ -11,7 +11,8 @@
 #include "mem.h"
 #include "limine.h"
 
-struct frame_marker *first_page_frame;
+static struct frame_marker *first_page_frame;
+static unsigned long int n_free_page_frames;
 
 static volatile struct limine_memmap_request memmap_request= {
     .id = LIMINE_MEMMAP_REQUEST,
@@ -72,7 +73,6 @@ void setup_kernel_map() {
     // start of higher half memory
     
     struct limine_hhdm_response *hhdm_response = hhdm_request.response;
-    printk("HHDM Offset = 0x%p\n", hhdm_response->offset);
 
     for (uint64_t p = 0; p < 0x100000000; p += 4096) {
         map_page_specific_pml4(kernel_pml4_table, p, hhdm_response->offset + p, PSE_WRITEABLE);
@@ -98,14 +98,14 @@ unsigned long int mem_init() {
     }
 #endif
 
-    unsigned long int newblock_count = find_free_frames();
-    printk(SYSTEM_PMEM PGOOD("Added %d 4K blocks to the physical page frame list.\n"), newblock_count);
+    n_free_page_frames = find_free_frames();
+    printk(SYSTEM_PMEM PGOOD("Added %d 4K blocks to the physical page frame list.\n"), n_free_page_frames);
 
     kernel_pml4_table = get_phys_block();
     setup_kernel_map();
-    printk(SYSTEM_PAGING PGOOD("Successfully set up kernel page mapping.\n"));
+    printk(SYSTEM_PAGING PGOOD("Successfully set up kernel page mapping. %d blocks left.\n"), n_free_page_frames);
 
-    return newblock_count;
+    return n_free_page_frames;
 }
 
 void *get_phys_block() {    
@@ -120,17 +120,17 @@ void *get_phys_block() {
     printk(SYSTEM_PMEM "Allocated new physical block at 0x%p\n", ret);
 #endif
 
-    return ret;  
+    n_free_page_frames--;
+    return ret;
 }
 
 void put_phys_block(void *b_addr) {
     struct frame_marker *new_block = (struct frame_marker *)b_addr;
 
-    *new_block = (struct frame_marker) {
-        .next_frame = first_page_frame
-    };
-
+    new_block->next_frame = first_page_frame;
     first_page_frame = new_block;
+
+    n_free_page_frames++;
 }
 
 void *get_consecutive_phys_blocks(unsigned int n) {

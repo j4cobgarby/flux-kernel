@@ -26,8 +26,6 @@ struct frame_marker {
     struct frame_marker *next_frame;
 };
 
-extern struct frame_marker *first_page_frame;
-
 /*  Read Limine's memory map, and construct an initial linked list of available
     memory blocks from this.
 
