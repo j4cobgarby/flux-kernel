@@ -14,6 +14,7 @@
 #include "structures.h"
 
 extern struct gdt_descriptor_long gdt_table[];
+extern struct tss_long tss_table;
 
 extern void load_gdt(void);
 extern void reload_seg_registers(void);

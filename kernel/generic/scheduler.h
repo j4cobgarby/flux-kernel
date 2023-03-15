@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 #ifdef __ARCH_X64__
-    #include "arch/x64/thread_x64.h"
+    #include "arch/x64/thread.h"
 #endif
 
 enum sched_state {
@@ -24,10 +24,10 @@ struct task {
     long long unsigned int elapsed_total; // The total amount of CPU time this schedulable has got
     long long unsigned int elapsed_since_run; // The time elapsed since it was last running
 
-    /* Saved Data */
 #ifdef __ARCH_X64__
     struct processor_regs regs;
     pml4_entry_t *pml4_table;
+    unsigned short int privilege_level;
 #endif
 
     // This is where in the future, other values such as the user that ran it, its working directory,
@@ -48,6 +48,10 @@ extern struct task tasks[N_TASKS];
  * cpu", since kernel code might be running, handling an interrupt or something.
  */
 extern task_id current_task;
+
+size_t new_task();
+
+size_t copy_task();
 
 void scheduler_init();
 

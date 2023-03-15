@@ -3,6 +3,7 @@
 
 #include "flux.h"
 
+#include <stddef.h>
 #include <stdint.h>
 
 struct processor_regs {
@@ -41,6 +42,14 @@ struct processor_regs {
     uint64_t cr3;
 };
 
+/*  Save the current CPU registers into memory. */
+void save_regs(struct processor_regs *);
 
+/*  Load CPU registers from memory into the CPU.
+    Loading the instruction pointer will jump to where the task was last
+    executing, and so this function will not return. */
+void load_regs(struct processor_regs *);
+
+void print_regs(struct processor_regs *);
 
 #endif /* __ARCH_X64_THREAD_H__ */

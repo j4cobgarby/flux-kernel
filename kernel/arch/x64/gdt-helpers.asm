@@ -16,7 +16,7 @@ reload_seg_registers:
     lea rax, [rel .reload_ret_to]
     push rax
     retfq
-.reload_ret_to
+.reload_ret_to:
     mov ax, 0x10
     mov ds, ax
     mov es, ax

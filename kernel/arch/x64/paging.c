@@ -35,7 +35,6 @@ void paging_init() {
         kernel's paging structure should already be set up starting at
         kernel_pml4_table. */
 
-    __asm__ volatile ("xchg %bx, %bx");
     set_cr3(CR3_BASE_ADDR((flux_phyaddr)kernel_pml4_table));
 }
 

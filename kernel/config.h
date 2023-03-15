@@ -9,7 +9,7 @@
 // #define PRETTY_LOGO
 
 // Set if Flux should print each region of memory that it is told about by Limine.
-//#define DEBUG_PRINT_MEMMAP_ENTRIES
+#define DEBUG_PRINT_MEMMAP_ENTRIES
 
 // Set if Flux should print a message each time a physical block of memory is
 // allocated.

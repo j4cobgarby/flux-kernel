@@ -4,6 +4,9 @@
 #include "arch/x64/structures.h"
 #include "generic/printk.h"
 
+struct tss_long tss_table = {
+};
+
 struct gdt_descriptor_long gdt_table[] = {
     INIT_SEG_DESCRIPTOR(0l, 0l, 0, 0),
     INIT_SEG_DESCRIPTOR(0l, 0l, SEG_AB_PRESENT | SEG_AB_DPL(0) | SEG_AB_CODE_DATA | SEG_AB_EXEC | SEG_AB_RW, SEG_FLAG_LONG | SEG_FLAG_4K_BLOCKS),

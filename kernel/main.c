@@ -12,11 +12,12 @@
 #ifdef __ARCH_X64__
 #include "arch/x64/paging.h"
 #include "arch/x64/structures.h"
-#include "arch/x64/thread_x64.h"
+#include "arch/x64/thread.h"
 #include "arch/x64/idt.h"
 #include "arch/x64/mem.h"
 #include "arch/x64/serial.h"
 #include "arch/x64/gdt.h"
+#include "arch/x64/thread.h"
 #else
 #error Unkown architecture
 #endif
@@ -32,6 +33,12 @@ static void done(void) {
     }
 }
 
+void loop(void) {
+    for (;;) {
+        __asm__("xchg %bx, %bx");
+    }
+}
+
 void _start(void) {
     // Some architecture-specific initialisation
 #ifdef __ARCH_X64__
@@ -39,28 +46,33 @@ void _start(void) {
         send debugging information to the host operating system (if running in a VM),
         or an external computer (if running on hardware). */
     serial_init();
-
     /*  Here we initialise the _physical_ memory management system. This deals with
         allocating and freeing individual blocks of physical memory, and doesn't
         deal at all with virtual address translation. */
     mem_init();
-
     paging_init();
-
     /*  Although Limine actually loads a valid GDT for us, we want to load and have
         control over our own. This way, we can add entries to it when needed. */
     gdt_init();
-
     /*  Early on we need to initialise the IDT. This describes the code that is run
         when the CPU encounters various interrupts and exceptions. */
     idt_init();
 #endif /* __ARCH_X64__ */
-
     scheduler_init();
 
     if (kern_addr_request.response == NULL) done();
 
+    printk("Loop @ %p\n", &loop);
+
+    struct processor_regs rs;
+    save_regs(&rs);
+    rs.rip = (uint64_t)&loop;
+    print_regs(&rs);
+    load_regs(&rs);
+
     printk(PGOOD("Flux Kernel " FLUX_VERS_STRING " initialised successfully!\n"));
+
+    
 #ifdef PRETTY_LOGO
     printk("\
                      .'                                   ..                    \n\

@@ -12,6 +12,8 @@
 
 #define ERROR(msg) TRACE(PBAD(msg)); for(;;);
 
+#define WARN(msg) printk(PWARN("??? " msg))
+
 #define TRACE(msg) \
     printk("*** " msg " at %s:%d [%s]\n", __FILE__, __LINE__, __PRETTY_FUNCTION__)
 

@@ -36,6 +36,6 @@ void kputs(const char *restrict str);
 void kputhex(uint64_t x, int leading, int spacers);
 void kputdec(uint64_t x);
 
-void printk(const char *restrict fmt, ...);
+void __attribute__((no_caller_saved_registers)) printk(const char *restrict fmt, ...);
 
 #endif /* __GENERIC__PRINTK_H__ */
