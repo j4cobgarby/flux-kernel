@@ -64,7 +64,7 @@ void setup_kernel_map() {
                 map_page_specific_pml4(kernel_pml4_table, 
                     entry->base + b_offset, 
                     (flux_virtaddr)__FLUX_BASE_VIRT + b_offset, 
-                    PSE_WRITEABLE);
+                    PSE_WRITEABLE | PSE_USER_MODE);
             }
         }
     }
@@ -75,7 +75,7 @@ void setup_kernel_map() {
     struct limine_hhdm_response *hhdm_response = hhdm_request.response;
 
     for (uint64_t p = 0; p < 0x100000000; p += 4096) {
-        map_page_specific_pml4(kernel_pml4_table, p, hhdm_response->offset + p, PSE_WRITEABLE);
+        map_page_specific_pml4(kernel_pml4_table, p, hhdm_response->offset + p, PSE_WRITEABLE | PSE_USER_MODE);
     }
 }
 

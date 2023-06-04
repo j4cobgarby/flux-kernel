@@ -27,6 +27,12 @@ static volatile struct limine_kernel_address_request kern_addr_request = {
     .revision = 0
 };
 
+static volatile struct limine_module_request mod_request = {
+    .id = LIMINE_MODULE_REQUEST,
+    .revision = 0,
+    
+};
+
 static void done(void) {
     for (;;) {
         __asm__("hlt");
@@ -62,13 +68,30 @@ void _start(void) {
 
     if (kern_addr_request.response == NULL) done();
 
-    printk("Loop @ %p\n", &loop);
+    struct limine_module_response *mod_response = mod_request.response;
+    printk("Limine modules loaded with %d modules.", mod_response->module_count);
 
-    struct processor_regs rs;
-    save_regs(&rs);
-    rs.rip = (uint64_t)&loop;
-    print_regs(&rs);
-    load_regs(&rs);
+    for (int i = 0; i < mod_response->module_count; i++) {
+        struct limine_file *file = mod_response->modules[i];
+        printk("Module file '%s' @ 0x%p\n", file->path, file->address);
+
+        void (*mod_exe)(void) = file->address;
+        __asm__ ("xchg %bx, %bx");
+        segment_selector_t cs = INIT_SEGMENT_SELECTOR(3, 0, 3);
+        segment_selector_t ss = INIT_SEGMENT_SELECTOR(3, 0, 4);
+        __asm__(
+"\
+push %0\n\
+push %%rsp\n\
+pushf\n\
+push %1\n\
+push %2\n\
+iretq"
+    :
+    : "r" ((uint64_t)ss), "r" ((uint64_t)cs), "r" (mod_exe));
+
+        // mod_exe();
+    }
 
     printk(PGOOD("Flux Kernel " FLUX_VERS_STRING " initialised successfully!\n"));
 

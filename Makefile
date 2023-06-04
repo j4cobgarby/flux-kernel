@@ -28,8 +28,10 @@ kernel:
 $(IMG_PREF).iso: limine kernel
 	rm -rf iso_root
 	mkdir -p iso_root $(IMG_PREF)
-	cp $(ELF) \
-		limine.cfg limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin iso_root/
+	cp $(ELF) limine.cfg \
+		limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin \
+		volume_contents/* \
+		iso_root/
 	xorriso -as mkisofs -b limine-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine-cd-efi.bin \
