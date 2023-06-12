@@ -7,7 +7,7 @@
 #include <stddef.h>
 
 #ifdef __ARCH_X64__
-    #include "arch/x64/thread.h"
+    #include "arch/x64/proc.h"
 #endif
 
 enum sched_state {

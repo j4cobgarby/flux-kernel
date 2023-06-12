@@ -63,8 +63,7 @@ void map_page_specific_pml4(pml4_entry_t *pml4_addr, flux_phyaddr paddr, flux_vi
     int pdt_i = EXTRACT_PDT_INDEX(vaddr);
     int pt_i = EXTRACT_PT_INDEX(vaddr);
 
-    // CR3 points to the currently active PML4 table. We assume here that it points
-    // to a valid table. Each paging table (in 64 bit mode, which we're using here)
+    // Each paging table (in 64 bit mode, which we're using here)
     // has 512 64-bit entries.
     pml4_entry_t *pml4_e = &(pml4_addr[pml4_i]);
     if (!(*pml4_e & PSE_PRESENT)) {
@@ -72,20 +71,13 @@ void map_page_specific_pml4(pml4_entry_t *pml4_addr, flux_phyaddr paddr, flux_vi
         // Page Directory Pointer Table also doesn't exist. First we allocate a 4K block for
         // that, and then construct the PML4 entry to point to it.
         flux_phyaddr new_pdpt = (flux_phyaddr)get_phys_block();
-#ifdef DEBUG_PRINT_ON_NEW_PAGE_STRUCTURE
-        printk(SYSTEM_PAGING "Allocated new PDP table at %p\n", new_pdpt);
-#endif
         zero_paging_structure((uint64_t*)new_pdpt);
         *pml4_e = PSE_PTR(new_pdpt) | PSE_PRESENT | flags;
-    } else {
     }
 
     pdpt_entry_t *pdpt_e = &(((pdpt_entry_t*)PSE_PTR(*pml4_e))[pdpt_i]);
     if (!(*pdpt_e & PSE_PRESENT)) {
         flux_phyaddr new_pdt = (flux_phyaddr)get_phys_block();
-#ifdef DEBUG_PRINT_ON_NEW_PAGE_STRUCTURE
-        printk(SYSTEM_PAGING "Allocated new Page Directory Table at %p\n", new_pdt);
-#endif
         zero_paging_structure((uint64_t*)new_pdt);
         *pdpt_e = PSE_PTR(new_pdt) | PSE_PRESENT | flags;
     }
@@ -93,9 +85,6 @@ void map_page_specific_pml4(pml4_entry_t *pml4_addr, flux_phyaddr paddr, flux_vi
     pdt_entry_t *pdt_e = &(((pdt_entry_t*)PSE_PTR(*pdpt_e))[pdt_i]);
     if (!(*pdt_e & PSE_PRESENT)) {
         flux_phyaddr new_pt = (flux_phyaddr)get_phys_block();
-#ifdef DEBUG_PRINT_ON_NEW_PAGE_STRUCTURE
-        printk(SYSTEM_PAGING "Allocated new page table at %p\n", new_pt);
-#endif
         zero_paging_structure((uint64_t*)new_pt);
         *pdt_e = PSE_PTR(new_pt) | PSE_PRESENT | flags;
     }

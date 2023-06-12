@@ -1,3 +1,4 @@
+#include "arch/x64/proc.h"
 #include "flux.h"
 
 #include <stdint.h>
@@ -12,20 +13,13 @@
 #ifdef __ARCH_X64__
 #include "arch/x64/paging.h"
 #include "arch/x64/structures.h"
-#include "arch/x64/thread.h"
 #include "arch/x64/idt.h"
 #include "arch/x64/mem.h"
 #include "arch/x64/serial.h"
 #include "arch/x64/gdt.h"
-#include "arch/x64/thread.h"
 #else
 #error Unkown architecture
 #endif
-
-static volatile struct limine_kernel_address_request kern_addr_request = {
-    .id = LIMINE_KERNEL_ADDRESS_REQUEST,
-    .revision = 0
-};
 
 static volatile struct limine_module_request mod_request = {
     .id = LIMINE_MODULE_REQUEST,
@@ -66,14 +60,23 @@ void _start(void) {
 #endif /* __ARCH_X64__ */
     scheduler_init();
 
-    if (kern_addr_request.response == NULL) done();
+    printk("Trying to get block?");
+    get_phys_block();
+    printk("Done.\n");
 
     struct limine_module_response *mod_response = mod_request.response;
-    printk("Limine modules loaded with %d modules.", mod_response->module_count);
+    printk("Limine modules loaded with %d modules.\n", mod_response->module_count);
 
     for (int i = 0; i < mod_response->module_count; i++) {
         struct limine_file *file = mod_response->modules[i];
-        printk("Module file '%s' @ 0x%p\n", file->path, file->address);
+        pml4_entry_t *task_pml4;
+
+        printk("Initialising task memory layout.\n");
+
+        printk("Task pmem begins at %p\n", (uint64_t)file->address - (uint64_t)__FLUX_BASE_VIRT);
+        init_task_space_from_mem(&task_pml4, (uint64_t)file->address - (uint64_t)__FLUX_BASE_VIRT, 1);
+
+        printk("Calling module code '%s' @ 0x%p\n", file->path, file->address);
 
         void (*mod_exe)(void) = file->address;
         __asm__ ("xchg %bx, %bx");

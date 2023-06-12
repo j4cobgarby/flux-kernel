@@ -13,6 +13,10 @@ all-hdd: $(IMG_PREF).hdd
 run: $(IMG_PREF).iso
 	qemu-system-x86_64 -M q35 -m 2G -cdrom $< -boot d -serial stdio -name Flux -d page
 
+.PHONY: debug
+debug: $(IMG_PREF).iso
+	qemu-system-x86_64 -s -S -M q35 -m 2G -cdrom $< -boot d -serial stdio -name Flux -d page
+
 .PHONY: run-hdd
 run-hdd: $(IMG_PREF).hdd
 	qemu-system-x86_64 -M q35 -m 2G -hda $(IMG_PREF).hdd
@@ -30,7 +34,7 @@ $(IMG_PREF).iso: limine kernel
 	mkdir -p iso_root $(IMG_PREF)
 	cp $(ELF) limine.cfg \
 		limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin \
-		volume_contents/* \
+		modules/* \
 		iso_root/
 	xorriso -as mkisofs -b limine-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
@@ -38,7 +42,6 @@ $(IMG_PREF).iso: limine kernel
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
 		iso_root -o $@
 	limine/limine-deploy $@
-	rm -rf iso_root
 
 $(IMG_PREF).hdd: limine kernel
 	rm -f $(IMG_PREF).hdd

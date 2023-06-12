@@ -18,6 +18,10 @@ Contributors: (add your name if you modify this file)
 #include "structures.h"
 #include "limine.h"
 
+extern volatile struct limine_memmap_request memmap_request;
+extern volatile struct limine_hhdm_request hddm_request;
+extern volatile struct limine_kernel_address_request kernel_address_request;
+
 /*  This structure will be present at the beginning of each page frame in memory
     so that, starting from the (logically) first, a frame can be taken and the
     next one in the list can be found. */
